@@ -5,8 +5,6 @@
 #include <time.h>
 #include <stdlib.h>
 #include <iostream>
-//#include <Math.h>     // Needed for sin, cos
-//#define PI 3.14159265f
 
 // Global variables
 char title[] = "CoinCatcher";  // Windowed mode's title
@@ -40,6 +38,7 @@ void display() {
     glLoadIdentity();              // Reset model-view matrix
 
     player.drawPlayer();
+    coinDispatcher.collisionCheck(player);
     coinDispatcher.draw();
 
     glutSwapBuffers();  // Swap front and back buffers (of double buffered mode)
@@ -88,7 +87,6 @@ void Timer(int value) {
 
 void dispatchcoin(int value) {
     int nextInterval = getRandomInterval();
-    std::cout << nextInterval << std::endl;
     glutTimerFunc(nextInterval, dispatchcoin, 0); // subsequent timer call at milliseconds
     coinDispatcher.addCoin();
 }

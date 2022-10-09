@@ -77,6 +77,10 @@ public:
 		ballYMin = clipAreaYBottom + ballRadius;
 		ballYMax = clipAreaYTop - ballRadius;
 	}
+
+	GLfloat getPosX() { return ballX; }
+	GLfloat getPosY() { return ballY; }
+	GLfloat getRadius() { return ballRadius; }
 private:
 	GLfloat ballRadius;   // Radius of the bouncing ball
 	GLfloat ballX;        // Ball's center (x, y) position

@@ -3,6 +3,7 @@
 #include <Math.h>
 #include <vector>
 #include <iostream>
+#include "Player.h"
 #define PI 3.14159265f
 
 class Coin {
@@ -18,6 +19,15 @@ public:
 
 	Coin():posX(0.0f), posY(1.0f), ySpeed(0.05f), activated(false) {}
 
+	bool collisionCheck(GLfloat objPosX, GLfloat objPosY, GLfloat objRadius) {
+		GLfloat xDis = objPosX - posX;
+		GLfloat yDis = objPosY - posY;
+		GLfloat dist2 = xDis * xDis + yDis * yDis;
+		GLfloat rad = (objRadius + radius);
+		GLfloat rad2 = rad * rad;
+		return dist2 < rad2;
+	}
+
 	void draw() {
 		if (!activated) return;
 
@@ -32,9 +42,10 @@ public:
 		}
 		else if (posY < posYMin) {
 			posY = posYMin;
-			activated = false;
+			this->deactivate();
 		}
 
+		// Draw 
 		glPushMatrix();
 		glTranslatef(posX, posY, 0.0f);  // Translate to (xPos, yPos)
 		// Use triangular segments to form a circle
@@ -53,7 +64,7 @@ public:
 		posY -= ySpeed;
 	}
 
-	bool getStatus() {
+	bool isActivated() {
 		return activated;
 	}
 
@@ -61,6 +72,18 @@ public:
 		activated = true;
 		this->posX = posX;
 		this->posY = posY;
+	}
+
+	void deactivate() {
+		activated = false;
+	}
+
+	GLfloat getPosX() {
+		return posX;
+	}
+
+	GLfloat getPosY() {
+		return posY;
 	}
 
 private:
@@ -127,12 +150,27 @@ public:
 		size_t newCoinIndex = 0;
 		for (size_t i = 0; i < coinList.size(); i++) {
 			// not activated
-			if (!coinList[i].getStatus()) {
+			if (!coinList[i].isActivated()) {
 				newCoinIndex = i;
 				break;
 			}
 		}
 		coinList[newCoinIndex].reset(posX, posY);
+	}
+
+	void collisionCheck(Player& player) {
+		GLfloat playerRad = player.getRadius();
+		GLfloat playerX = player.getPosX();
+		GLfloat playerY = player.getPosY();
+
+		for (auto& coin : coinList) {
+			if (!coin.isActivated()) continue;
+			bool status = coin.collisionCheck(playerX, playerY, playerRad);
+			if (status) {
+				std::cout << "Collided! At pos:(" << coin.getPosX() << ", " << coin.getPosY() << ")" << std::endl;
+				coin.deactivate();
+			}
+		}
 	}
 
 private:
