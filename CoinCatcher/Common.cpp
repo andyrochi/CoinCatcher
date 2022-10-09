@@ -21,3 +21,13 @@ void displayScore(int number, GLfloat xpos, GLfloat ypos) {
     glutStrokeString(GLUT_STROKE_ROMAN, (unsigned char*)buffer);
     glPopMatrix();
 }
+
+void displayTextBig(char ch[], GLfloat xpos, GLfloat ypos) {
+    int numofchar = strlen(ch);
+    glPushMatrix();
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glTranslatef(xpos, ypos, 0.0f);  // Translate to (xPos, yPos)
+    glScalef(0.001, 0.001, 1);
+    glutStrokeString(GLUT_STROKE_ROMAN, (unsigned char*)ch);
+    glPopMatrix();
+}

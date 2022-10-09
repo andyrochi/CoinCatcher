@@ -9,3 +9,4 @@ extern GameStatus GAME_STATUS;
 
 void displayText(char ch[], GLfloat xpos, GLfloat ypos);
 void displayScore(int number, GLfloat xpos, GLfloat ypos);
+void displayTextBig(char ch[], GLfloat xpos, GLfloat ypos);

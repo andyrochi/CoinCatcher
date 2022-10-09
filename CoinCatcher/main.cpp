@@ -14,10 +14,10 @@ int windowPosY = 300;      // Windowed mode's top-left corner y
 
 int refreshMillis = 30;      // Refresh period in milliseconds
 int dispatchIntervals[] = { 200, 300, 400, 500, 600, 700 };
-size_t GAME_TIME = 120;
+size_t GAME_TIME = 90;
 
 // Player stats
-GLfloat playerRadius = 0.1f, playerSpeed = 0.03f, playerFasterSpeed = 0.07f;
+GLfloat playerRadius = 0.1f, playerSpeed = 0.05f, playerFasterSpeed = 0.08f;
 GameStatus GAME_STATUS = PAUSED;
 
 Player player;
@@ -60,6 +60,15 @@ void display() {
     player.drawPlayer();
     coinDispatcher.collisionCheck(player, scoreCount);
     coinDispatcher.draw();
+
+    if (GAME_STATUS == GAMEOVER) {
+        char text[] = "TIME'S UP!";
+        displayTextBig(text, -0.4f, 0.0f);
+        int score = scoreCount.getScore();
+        char scoreText[10];
+        snprintf(scoreText, 10, "Score: %d", score);
+        displayTextBig(scoreText, -0.4f, -0.3f);
+    }
 
     glutSwapBuffers();  // Swap front and back buffers (of double buffered mode)
 }
@@ -132,7 +141,11 @@ void keyboard(unsigned char key, int x, int y) {
         else if (GAME_STATUS == PAUSED)
             GAME_STATUS = PLAYING;
         break;
+    case 48: // 0
+        GAME_STATUS = GAMEOVER;
+        break;
     }
+        
 }
 
 /* Callback handler for special-key event */

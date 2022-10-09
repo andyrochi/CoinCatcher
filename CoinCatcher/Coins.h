@@ -67,13 +67,23 @@ public:
 		// Use triangular segments to form a circle
 		if (type == COIN) {
 			glBegin(GL_TRIANGLE_FAN);
-			glColor3f(1.0f, 1.0f, 0.0f);
+			// (233,173,3)
+			glColor3f(0.914f, 0.678f, 0.012f);
 			glVertex2f(0.0f, 0.0f);       // Center of circle
-			int numSegments = 100;
+			int numSegments = 80;
 			GLfloat angle;
 			for (int i = 0; i <= numSegments; i++) { // Last vertex same as first vertex
 				angle = i * 2.0f * PI / numSegments;  // 360 deg for all segments
 				glVertex2f(cos(angle) * radius, sin(angle) * radius);
+			}
+			glEnd();
+			glBegin(GL_TRIANGLE_FAN);
+			// (243,199,13)
+			glColor3f(0.952f, 0.780f, 0.051f);
+			glVertex2f(0.0f, 0.0f);       // Center of circle
+			for (int i = 0; i <= numSegments; i++) { // Last vertex same as first vertex
+				angle = i * 2.0f * PI / numSegments;  // 360 deg for all segments
+				glVertex2f(cos(angle) * radius * 0.7, sin(angle) * radius * 0.7);
 			}
 			glEnd();
 		}
