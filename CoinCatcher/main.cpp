@@ -58,14 +58,35 @@ void display() {
     glMatrixMode(GL_MODELVIEW);    // To operate on the model-view matrix
     glLoadIdentity();              // Reset model-view matrix
 
-    displayScoreText(clipAreaXRight * 0.4f, 0.9f);
-    displayScore(scoreCount.getScore(), clipAreaXRight * 0.7, 0.9f);
-    displayTimer(-0.1f, 0.9f);
 
-    player.drawPlayer();
-    coinDispatcher.collisionCheck(player, scoreCount);
-    coinDispatcher.draw();
+    if (GAME_STATUS == STARTMENU) {
+        char text[] = "WELCOME TO COIN CATCHER!";
+        displayTextBig(text, -1.0f, 0.4f);
+        char text3[] = "TRY TO SCORE AS MUCH AS YOU CAN!";
+        displayTextMedium(text3, -1.0f, -0.2f);
+        char text2[] = "PRESS <ENTER> TO START GAME";
+        displayTextMedium(text2, -0.8f, 0.1f);
+        char text4[] = "PRESS <H> FOR MORE INFO";
+        displayTextMedium(text4, -0.7f, -0.5f);
+    }
 
+    if (GAME_STATUS != STARTMENU) {
+        displayScoreText(clipAreaXRight * 0.4f, 0.9f);
+        displayScore(scoreCount.getScore(), clipAreaXRight * 0.7, 0.9f);
+        displayTimer(-0.1f, 0.9f);
+
+        player.drawPlayer();
+        coinDispatcher.collisionCheck(player, scoreCount);
+        coinDispatcher.draw();
+    }
+
+    if (GAME_STATUS == PAUSED) {
+        char text[] = "PAUSED";
+        displayTextBig(text, -0.25f, 0.2f);
+        char text2[] = "PRESS <SPACE> TO CONTINUE";
+        displayTextMedium(text2, -0.75f, -0.1f);
+    }
+    
     if (GAME_STATUS == GAMEOVER) {
         char text[] = "TIME'S UP!";
         displayTextBig(text, -0.4f, 0.2f);
@@ -165,6 +186,11 @@ void keyboard(unsigned char key, int x, int y) {
             GAME_STATUS = PLAYING;
         }
         break;
+    case 13:
+        if (GAME_STATUS == STARTMENU) {
+            GAME_STATUS = PLAYING;
+        }
+        break;
     }
         
 }
@@ -236,7 +262,7 @@ int main(int argc, char** argv) {
     glutKeyboardFunc(keyboard);   // Register callback handler for special-key event
     glutMouseFunc(mouse);   // Register callback handler for mouse event
     initGL();                     // Our own OpenGL initialization
-    GAME_STATUS = PLAYING;
+    GAME_STATUS = STARTMENU;
     glutMainLoop();               // Enter event-processing loop
     return 0;
 }
