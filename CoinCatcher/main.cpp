@@ -18,6 +18,7 @@ size_t GAME_TIME = 120;
 
 // Player stats
 GLfloat playerRadius = 0.1f, playerSpeed = 0.03f, playerFasterSpeed = 0.07f;
+GameStatus GAME_STATUS = PAUSED;
 
 Player player;
 CoinDispatcher coinDispatcher;
@@ -99,7 +100,12 @@ int getRandomInterval() {
 }
 
 void gameTimer(int value) {
-    GAME_TIME -= 1;
+    if (GAME_STATUS == PLAYING) {
+        GAME_TIME -= 1;
+        if (GAME_TIME <= 0) {
+            GAME_STATUS = GAMEOVER;
+        }
+    }
     glutTimerFunc(1000, gameTimer, 0);
 }
 
@@ -120,6 +126,11 @@ void keyboard(unsigned char key, int x, int y) {
     switch (key) {
     case 27:     // ESC key
         exit(0);
+        break;
+    case 32:
+        if (GAME_STATUS == PLAYING) GAME_STATUS = PAUSED;
+        else if (GAME_STATUS == PAUSED)
+            GAME_STATUS = PLAYING;
         break;
     }
 }
@@ -191,6 +202,7 @@ int main(int argc, char** argv) {
     glutKeyboardFunc(keyboard);   // Register callback handler for special-key event
     glutMouseFunc(mouse);   // Register callback handler for mouse event
     initGL();                     // Our own OpenGL initialization
+    GAME_STATUS = PLAYING;
     glutMainLoop();               // Enter event-processing loop
     return 0;
 }

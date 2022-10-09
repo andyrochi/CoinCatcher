@@ -98,6 +98,11 @@ public:
 		}
 		glPopMatrix();
 
+		updatePosition();
+	}
+
+	void updatePosition() {
+		if (GAME_STATUS != PLAYING) return;
 		posY -= ySpeed;
 	}
 
@@ -180,7 +185,7 @@ public:
 		glEnd();
 		glPopMatrix();
 
-		posX += xSpeed;
+		updatePosition();
 
 		// draw coins
 		for (auto& c : objectPool) {
@@ -188,7 +193,13 @@ public:
 		}
 	}
 
+	void updatePosition() {
+		if (GAME_STATUS != PLAYING) return;
+		posX += xSpeed;
+	}
+
 	void tossObject() {
+		if (GAME_STATUS != PLAYING) return;
 		size_t newObjectIndex = 0;
 		for (size_t i = 0; i < objectPool.size(); i++) {
 			// not activated
@@ -212,7 +223,7 @@ public:
 	}
 
 	void collisionCheck(Player& player, ScoreManager& score) {
-		
+		if (GAME_STATUS != PLAYING) return;
 		GLfloat playerRad = player.getRadius();
 		GLfloat playerX = player.getPosX();
 		GLfloat playerY = player.getPosY();

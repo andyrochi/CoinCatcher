@@ -70,15 +70,19 @@ public:
 	}
 
 	void moveRight() {
+		if (GAME_STATUS != PLAYING) return;
 		ballX += xSpeed;
 	}
 	void moveLeft() {
+		if (GAME_STATUS != PLAYING) return;
 		ballX -= xSpeed;
 	}
 	void moveUp() {
+		if (GAME_STATUS != PLAYING) return;
 		ballY += ySpeed;
 	}
 	void moveDown() {
+		if (GAME_STATUS != PLAYING) return;
 		ballY -= ySpeed;
 	}
 
