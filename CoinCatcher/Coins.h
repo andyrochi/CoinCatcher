@@ -18,7 +18,7 @@ public:
 		posYMax = clipAreaYTop - radius;
 	}
 
-	Coin():posX(0.0f), posY(1.0f), ySpeed(0.05f), activated(false) {}
+	Coin():posX(0.0f), posY(1.0f), ySpeed(-0.05f), activated(false) {}
 
 	bool collisionCheck(GLfloat objPosX, GLfloat objPosY, GLfloat objRadius) {
 		GLfloat xDis = objPosX - posX;
@@ -40,6 +40,7 @@ public:
 		}
 		if (posY > posYMax) {
 			posY = posYMax;
+			ySpeed = -ySpeed;
 		}
 		else if (posY < posYMin) {
 			posY = posYMin;
@@ -73,6 +74,7 @@ public:
 		activated = true;
 		this->posX = posX;
 		this->posY = posY;
+		ySpeed = ySpeed > 0 ? -ySpeed : ySpeed;
 	}
 
 	void deactivate() {
@@ -105,7 +107,7 @@ public:
 		posXMin = clipAreaXLeft + radius;
 		posXMax = clipAreaXRight - radius;
 		posYMin = clipAreaYBottom + radius;
-		posYMax = clipAreaYTop - radius;
+		posYMax = clipAreaYTop - radius - 0.2f;
 		Coin::setBoundaries(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
 	}
 
