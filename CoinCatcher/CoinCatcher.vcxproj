@@ -176,6 +176,7 @@ copy "$(SolutionDir)\Dependencies\glew-2.1.0\bin\Release\$(Platform)\glew32.dll"
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coins.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

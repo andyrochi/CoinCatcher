@@ -18,6 +18,7 @@ int dispatchIntervals[] = { 200, 300, 400, 500, 600, 700 };
 
 Player player;
 CoinDispatcher coinDispatcher;
+Score scoreCount;
 
 // Projection clipping area
 GLdouble clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop;
@@ -38,7 +39,7 @@ void display() {
     glLoadIdentity();              // Reset model-view matrix
 
     player.drawPlayer();
-    coinDispatcher.collisionCheck(player);
+    coinDispatcher.collisionCheck(player, scoreCount);
     coinDispatcher.draw();
 
     glutSwapBuffers();  // Swap front and back buffers (of double buffered mode)

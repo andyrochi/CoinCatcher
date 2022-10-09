@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "Player.h"
+#include "Score.h"
 #define PI 3.14159265f
 
 class Coin {
@@ -145,8 +146,6 @@ public:
 	}
 
 	void addCoin() {
-		//std::cout << "Coin added at" << posX << " " << posY << std::endl;
-		//coinList.emplace_back( posX, posY );
 		size_t newCoinIndex = 0;
 		for (size_t i = 0; i < coinList.size(); i++) {
 			// not activated
@@ -158,7 +157,7 @@ public:
 		coinList[newCoinIndex].reset(posX, posY);
 	}
 
-	void collisionCheck(Player& player) {
+	void collisionCheck(Player& player, Score& score) {
 		GLfloat playerRad = player.getRadius();
 		GLfloat playerX = player.getPosX();
 		GLfloat playerY = player.getPosY();
@@ -168,6 +167,7 @@ public:
 			bool status = coin.collisionCheck(playerX, playerY, playerRad);
 			if (status) {
 				std::cout << "Collided! At pos:(" << coin.getPosX() << ", " << coin.getPosY() << ")" << std::endl;
+				score.incScore(50);
 				coin.deactivate();
 			}
 		}
