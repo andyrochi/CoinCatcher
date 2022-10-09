@@ -1,5 +1,4 @@
-#include <GL/glew.h>
-#include <GL/freeglut.h>
+#include "Common.h"
 #include <Math.h>
 #include <iostream>
 
@@ -12,7 +11,7 @@ int i = 0;
 class Player {
 public:
 	Player()
-		:ballRadius(0.1f), ballX(0.0f), ballY(-1.0f), xSpeed(0.03f), ySpeed(0.05f), status(NORMAL){}
+		:ballRadius(playerRadius), ballX(0.0f), ballY(-1.0f), xSpeed(playerSpeed), ySpeed(0.05f), status(NORMAL){}
 
 	Player(GLfloat ballRadius, GLfloat ballX, GLfloat ballY, GLfloat xSpeed, GLfloat ySpeed)
 		:ballRadius(ballRadius), ballX(ballX), ballY(ballY), xSpeed(xSpeed), ySpeed(ySpeed), status(NORMAL){}
@@ -59,7 +58,6 @@ public:
 		else {
 			glColor3f(1.0f, 0.0f, 0.0f);  // Red
 		}
-		//glColor3f(0.0f, 0.0f, 1.0f);  // Blue
 		glVertex2f(0.0f, 0.0f);       // Center of circle
 		int numSegments = 100;
 		GLfloat angle;
@@ -103,6 +101,19 @@ public:
 	void setStatus(Status newStatus=NORMAL) {
 		std::cout << "set status:" << newStatus << std::endl;
 		status = newStatus;
+		switch (newStatus) {
+		case INVINCIBLE:
+			ballRadius = 2.0f * playerRadius;
+			xSpeed = playerFasterSpeed;
+			updateBoundaries(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
+			break;
+		default:
+			ballRadius = playerRadius;
+			xSpeed = playerSpeed;
+			updateBoundaries(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
+			ballY = ballYMin;
+			break;
+		}
 	}
 
 	Status getStatus() {

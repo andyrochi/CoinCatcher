@@ -1,5 +1,4 @@
-#include <GL/glew.h>
-#include <GL/freeglut.h>
+#include "Common.h"
 #include "Player.h"
 #include "Coins.h"
 #include <time.h>
@@ -15,6 +14,9 @@ int windowPosY = 300;      // Windowed mode's top-left corner y
 
 int refreshMillis = 30;      // Refresh period in milliseconds
 int dispatchIntervals[] = { 200, 300, 400, 500, 600, 700 };
+
+// Player stats
+GLfloat playerRadius = 0.1f, playerSpeed = 0.03f, playerFasterSpeed = 0.07f;
 
 Player player;
 CoinDispatcher coinDispatcher;
@@ -32,11 +34,19 @@ void initGL() {
     glClearColor(0.0, 0.0, 0.0, 1.0); // Set background (clear) color to black
 }
 
+void displayScoreText(GLfloat xPos, GLfloat yPos) {
+    char text[] = "SCORE:";
+    displayText(text, xPos, yPos);
+}
+
 /* Callback handler for window re-paint event */
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);  // Clear the color buffer
     glMatrixMode(GL_MODELVIEW);    // To operate on the model-view matrix
     glLoadIdentity();              // Reset model-view matrix
+
+    displayScoreText(clipAreaXRight * 0.4f, 0.9f);
+    displayScore(scoreCount.getScore(), clipAreaXRight * 0.7, 0.9f);
 
     player.drawPlayer();
     coinDispatcher.collisionCheck(player, scoreCount);

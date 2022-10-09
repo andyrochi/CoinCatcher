@@ -22,6 +22,7 @@ public:
 	void printScore() {
 		std::cout << "Current Score: " << score << std::endl;
 	}
+
 private:
 	int score;
 };
