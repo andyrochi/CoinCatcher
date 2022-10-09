@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "Player.h"
-#include "Score.h"
+#include "ScoreManager.h"
 #define PI 3.14159265f
 
 enum objectType { COIN, OBSTACLE, POWERUP };
@@ -211,7 +211,7 @@ public:
 		objectPool[newObjectIndex].reset(posX, posY, type);
 	}
 
-	void collisionCheck(Player& player, Score& score) {
+	void collisionCheck(Player& player, ScoreManager& score) {
 		
 		GLfloat playerRad = player.getRadius();
 		GLfloat playerX = player.getPosX();

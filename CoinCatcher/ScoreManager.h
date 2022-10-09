@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
-class Score {
+class ScoreManager {
 public:
-	Score() {
+	ScoreManager() {
 		this->score = 0;
 	}
 	void incScore(int val=50) {

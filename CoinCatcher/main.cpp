@@ -10,15 +10,15 @@
 char title[] = "CoinCatcher";  // Windowed mode's title
 int windowWidth = 640;     // Windowed mode's width
 int windowHeight = 480;     // Windowed mode's height
-int windowPosX = 100;      // Windowed mode's top-left corner x
-int windowPosY = 100;      // Windowed mode's top-left corner y
+int windowPosX = 300;      // Windowed mode's top-left corner x
+int windowPosY = 300;      // Windowed mode's top-left corner y
 
 int refreshMillis = 30;      // Refresh period in milliseconds
 int dispatchIntervals[] = { 200, 300, 400, 500, 600, 700 };
 
 Player player;
 CoinDispatcher coinDispatcher;
-Score scoreCount;
+ScoreManager scoreCount;
 
 // Projection clipping area
 GLdouble clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop;
