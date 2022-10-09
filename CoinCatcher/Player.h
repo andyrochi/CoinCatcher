@@ -1,16 +1,21 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <Math.h>
+#include <iostream>
 
 #define PI 3.14159265f
 #pragma once
+
+enum Status { NORMAL, RECOVER, INVINCIBLE };
+int i = 0;
+
 class Player {
 public:
 	Player()
-		:ballRadius(0.1f), ballX(0.0f), ballY(-1.0f), xSpeed(0.03f), ySpeed(0.05f){}
+		:ballRadius(0.1f), ballX(0.0f), ballY(-1.0f), xSpeed(0.03f), ySpeed(0.05f), status(NORMAL){}
 
 	Player(GLfloat ballRadius, GLfloat ballX, GLfloat ballY, GLfloat xSpeed, GLfloat ySpeed)
-		:ballRadius(ballRadius), ballX(ballX), ballY(ballY), xSpeed(xSpeed), ySpeed(ySpeed){}
+		:ballRadius(ballRadius), ballX(ballX), ballY(ballY), xSpeed(xSpeed), ySpeed(ySpeed), status(NORMAL){}
 
 	void updateBoundaries(GLdouble clipAreaXLeft, GLdouble clipAreaXRight, GLdouble clipAreaYBottom, GLdouble clipAreaYTop) {
 		ballXMin = clipAreaXLeft + ballRadius;
@@ -37,7 +42,18 @@ public:
 		glTranslatef(ballX, ballY, 0.0f);  // Translate to (xPos, yPos)
 		// Use triangular segments to form a circle
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(0.0f, 0.0f, 1.0f);  // Blue
+		if (status == NORMAL) {
+			glColor3f(0.0f, 0.0f, 1.0f);  // Blue
+		}
+		else if (status == RECOVER) {
+			i = (i + 1) % 4;
+			GLfloat alphas[] = { 0.25f, 0.5f, 0.75f, 1.0f };
+			glColor4f(0.0f, 0.0f, 1.0f, alphas[i]);  // Green
+		}
+		else {
+			glColor3f(1.0f, 0.0f, 0.0f);  // Red
+		}
+		//glColor3f(0.0f, 0.0f, 1.0f);  // Blue
 		glVertex2f(0.0f, 0.0f);       // Center of circle
 		int numSegments = 100;
 		GLfloat angle;
@@ -78,6 +94,15 @@ public:
 		ballYMax = clipAreaYTop - ballRadius;
 	}
 
+	void setStatus(Status newStatus=NORMAL) {
+		std::cout << "set status:" << newStatus << std::endl;
+		status = newStatus;
+	}
+
+	Status getStatus() {
+		return status;
+	}
+
 	GLfloat getPosX() { return ballX; }
 	GLfloat getPosY() { return ballY; }
 	GLfloat getRadius() { return ballRadius; }
@@ -88,4 +113,5 @@ private:
 	GLfloat ballXMax, ballXMin, ballYMax, ballYMin; // Ball's center (x, y) bounds
 	GLfloat xSpeed;      // Ball's speed in x and y directions
 	GLfloat ySpeed;
+	Status status;
 };

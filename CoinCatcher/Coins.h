@@ -7,10 +7,24 @@
 #include "Score.h"
 #define PI 3.14159265f
 
+enum objectType { COIN, OBSTACLE, POWERUP };
+Player* playerPtr = NULL;
+
+// Change player status from recover to normal
+void recoverPlayer(int val) {
+	if (playerPtr != NULL && playerPtr->getStatus() == RECOVER)
+		playerPtr->setStatus(NORMAL);
+}
+void setPlayerNormal(int val) {
+	if(playerPtr != NULL) playerPtr->setStatus(NORMAL);
+}
+
 class Coin {
 public:
 	static inline GLfloat posXMax = 1.0f, posXMin = -1.0f, posYMax = 1.0f, posYMin = -1.0f;
 	static inline GLfloat radius = 0.05f;
+	static inline GLfloat rsin = 0.05f * sin(PI/6);
+	static inline GLfloat rcos = 0.05f * cos(PI / 6);
 	static void setBoundaries(GLdouble clipAreaXLeft, GLdouble clipAreaXRight, GLdouble clipAreaYBottom, GLdouble clipAreaYTop) {
 		posXMin = clipAreaXLeft + radius;
 		posXMax = clipAreaXRight - radius;
@@ -18,7 +32,7 @@ public:
 		posYMax = clipAreaYTop - radius;
 	}
 
-	Coin():posX(0.0f), posY(1.0f), ySpeed(-0.05f), activated(false) {}
+	Coin():posX(0.0f), posY(1.0f), ySpeed(-0.05f), activated(false), type(COIN) {}
 
 	bool collisionCheck(GLfloat objPosX, GLfloat objPosY, GLfloat objRadius) {
 		GLfloat xDis = objPosX - posX;
@@ -51,16 +65,37 @@ public:
 		glPushMatrix();
 		glTranslatef(posX, posY, 0.0f);  // Translate to (xPos, yPos)
 		// Use triangular segments to form a circle
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(1.0f, 1.0f, 0.0f);
-		glVertex2f(0.0f, 0.0f);       // Center of circle
-		int numSegments = 100;
-		GLfloat angle;
-		for (int i = 0; i <= numSegments; i++) { // Last vertex same as first vertex
-			angle = i * 2.0f * PI / numSegments;  // 360 deg for all segments
-			glVertex2f(cos(angle) * radius, sin(angle) * radius);
+		if (type == COIN) {
+			glBegin(GL_TRIANGLE_FAN);
+			glColor3f(1.0f, 1.0f, 0.0f);
+			glVertex2f(0.0f, 0.0f);       // Center of circle
+			int numSegments = 100;
+			GLfloat angle;
+			for (int i = 0; i <= numSegments; i++) { // Last vertex same as first vertex
+				angle = i * 2.0f * PI / numSegments;  // 360 deg for all segments
+				glVertex2f(cos(angle) * radius, sin(angle) * radius);
+			}
+			glEnd();
 		}
-		glEnd();
+		else if (type == OBSTACLE){
+			glBegin(GL_POLYGON);
+			glColor4f(0.85, 0.85, 0.85, 1);
+			glVertex2f(-1.5*radius, radius);
+			glVertex2f(-1.5*radius, -radius);
+			glVertex2f(1.5*radius, -radius);
+			glVertex2f(1.5*radius, radius);
+			glEnd();
+		}
+		else {
+			glBegin(GL_TRIANGLES);
+			glColor3f(1, 0, 0);
+			glVertex2f(-rcos, -rsin);
+			glColor3f(1, 1, 0);
+			glVertex2f(rcos, -rsin);
+			glColor3f(0, 1, 0);
+			glVertex2f(0.0f, radius);
+			glEnd();
+		}
 		glPopMatrix();
 
 		posY -= ySpeed;
@@ -70,11 +105,12 @@ public:
 		return activated;
 	}
 
-	void reset(GLfloat posX, GLfloat posY) {
+	void reset(GLfloat posX, GLfloat posY, objectType newType = COIN) {
 		activated = true;
 		this->posX = posX;
 		this->posY = posY;
 		ySpeed = ySpeed > 0 ? -ySpeed : ySpeed;
+		this->type = newType;
 	}
 
 	void deactivate() {
@@ -89,9 +125,14 @@ public:
 		return posY;
 	}
 
+	objectType getType() {
+		return type;
+	}
+
 private:
 	GLfloat posX, posY, ySpeed;
 	bool activated;
+	objectType type;
 };
 
 class CoinDispatcher {
@@ -99,7 +140,7 @@ public:
 	CoinDispatcher()
 		:radius(0.1f), posX(0.0f), posY(1.0f), xSpeed(0.03f) {
 		for (size_t i = 0; i < 100; i++) {
-			coinList.emplace_back();
+			objectPool.emplace_back();
 		}
 	}
 
@@ -142,35 +183,71 @@ public:
 		posX += xSpeed;
 
 		// draw coins
-		for (auto& c : coinList) {
+		for (auto& c : objectPool) {
 			c.draw();
 		}
 	}
 
-	void addCoin() {
-		size_t newCoinIndex = 0;
-		for (size_t i = 0; i < coinList.size(); i++) {
+	void tossObject() {
+		size_t newObjectIndex = 0;
+		for (size_t i = 0; i < objectPool.size(); i++) {
 			// not activated
-			if (!coinList[i].isActivated()) {
-				newCoinIndex = i;
+			if (!objectPool[i].isActivated()) {
+				newObjectIndex = i;
 				break;
 			}
 		}
-		coinList[newCoinIndex].reset(posX, posY);
+		objectType type;
+		int rnum = rand() % 10;
+		if (rnum == 0) {
+			type = POWERUP;
+		}
+		else if (rnum > 0 && rnum <3){
+			type = OBSTACLE;
+		}
+		else {
+			type = COIN;
+		}
+		objectPool[newObjectIndex].reset(posX, posY, type);
 	}
 
 	void collisionCheck(Player& player, Score& score) {
+		
 		GLfloat playerRad = player.getRadius();
 		GLfloat playerX = player.getPosX();
 		GLfloat playerY = player.getPosY();
+		playerPtr = &player;
 
-		for (auto& coin : coinList) {
+		for (auto& coin : objectPool) {
 			if (!coin.isActivated()) continue;
-			bool status = coin.collisionCheck(playerX, playerY, playerRad);
-			if (status) {
-				std::cout << "Collided! At pos:(" << coin.getPosX() << ", " << coin.getPosY() << ")" << std::endl;
-				score.incScore(50);
-				coin.deactivate();
+			bool hit = coin.collisionCheck(playerX, playerY, playerRad);
+			if (hit) {
+				//std::cout << "Collided! At pos:(" << coin.getPosX() << ", " << coin.getPosY() << ")" << std::endl;
+				switch (coin.getType()) {
+				case COIN:
+					std::cout << "COIN!" << std::endl;
+					score.incScore(50);
+					coin.deactivate();
+					break;
+				case OBSTACLE:
+					if (player.getStatus() != NORMAL) {
+						break;
+					}
+					std::cout << "OH NO!" << playerPtr << std::endl;
+					player.setStatus(RECOVER);
+					score.decScore(100);
+					glutTimerFunc(2000, recoverPlayer, 0);
+					coin.deactivate();
+					break;
+				case POWERUP:
+					std::cout << "POWERUP!" << std::endl;
+					player.setStatus(INVINCIBLE);
+					glutTimerFunc(4000, setPlayerNormal, 0);
+					coin.deactivate();
+					break;
+				}
+				
+				//coin.deactivate();
 			}
 		}
 	}
@@ -181,5 +258,5 @@ private:
 	GLfloat posY = -1.0f;
 	GLfloat posXMax, posXMin, posYMax, posYMin; // Ball's center (x, y) bounds
 	GLfloat xSpeed = 0.05f;      // Ball's speed in x and y directions
-	std::vector<Coin> coinList;
+	std::vector<Coin> objectPool;
 };

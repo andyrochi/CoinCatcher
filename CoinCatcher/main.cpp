@@ -89,8 +89,9 @@ void Timer(int value) {
 void dispatchcoin(int value) {
     int nextInterval = getRandomInterval();
     glutTimerFunc(nextInterval, dispatchcoin, 0); // subsequent timer call at milliseconds
-    coinDispatcher.addCoin();
+    coinDispatcher.tossObject();
 }
+
 /* Callback handler for normal-key event */
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
@@ -152,10 +153,12 @@ int main(int argc, char** argv) {
     srand(time(NULL));
 
     glutInit(&argc, argv);            // Initialize GLUT
-    glutInitDisplayMode(GLUT_DOUBLE); // Enable double buffered mode
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA); // Enable double buffered mode
     glutInitWindowSize(windowWidth, windowHeight);  // Initial window width and height
     glutInitWindowPosition(windowPosX, windowPosY); // Initial window top-left corner (x, y)
     glutCreateWindow(title);      // Create window with given title
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
     glutDisplayFunc(display);     // Register callback handler for window re-paint
     glutReshapeFunc(reshape);     // Register callback handler for window re-shape
     glutTimerFunc(0, Timer, 0);   // Refresh rate
