@@ -23,6 +23,10 @@ public:
 		std::cout << "Current Score: " << score << std::endl;
 	}
 
+	void resetScore() {
+		this->score = 0;
+	}
+
 private:
 	int score;
 };

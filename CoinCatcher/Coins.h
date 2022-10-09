@@ -273,6 +273,14 @@ public:
 		}
 	}
 
+	void reset() {
+		posX = 0.0f;
+		posY = 1.0f;
+		for (auto& coin : objectPool) {
+			coin.deactivate();
+		}
+	}
+
 private:
 	GLfloat radius = 0.1f;   // Radius of the bouncing ball
 	GLfloat posX = 0.0f;        // Ball's center (x, y) position

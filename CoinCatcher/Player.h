@@ -127,6 +127,14 @@ public:
 	GLfloat getPosX() { return ballX; }
 	GLfloat getPosY() { return ballY; }
 	GLfloat getRadius() { return ballRadius; }
+
+	void reset() {
+		ballX = 0.0f;
+		ballY = (-1.0f);
+		xSpeed = (playerSpeed);
+		ySpeed = (0.05f);
+		status = (NORMAL);
+	}
 private:
 	GLfloat ballRadius;   // Radius of the bouncing ball
 	GLfloat ballX;        // Ball's center (x, y) position

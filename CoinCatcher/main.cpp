@@ -47,6 +47,11 @@ void displayTimer(GLfloat xPos, GLfloat yPos) {
     displayText(time, xPos, yPos);
 }
 
+void resetGameTime() {
+    GAME_TIME = 90;
+}
+
+
 /* Callback handler for window re-paint event */
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);  // Clear the color buffer
@@ -55,7 +60,7 @@ void display() {
 
     displayScoreText(clipAreaXRight * 0.4f, 0.9f);
     displayScore(scoreCount.getScore(), clipAreaXRight * 0.7, 0.9f);
-    displayTimer(0.0f, 0.9f);
+    displayTimer(-0.1f, 0.9f);
 
     player.drawPlayer();
     coinDispatcher.collisionCheck(player, scoreCount);
@@ -63,11 +68,13 @@ void display() {
 
     if (GAME_STATUS == GAMEOVER) {
         char text[] = "TIME'S UP!";
-        displayTextBig(text, -0.4f, 0.0f);
+        displayTextBig(text, -0.4f, 0.2f);
         int score = scoreCount.getScore();
-        char scoreText[10];
-        snprintf(scoreText, 10, "Score: %d", score);
-        displayTextBig(scoreText, -0.4f, -0.3f);
+        char scoreText[30];
+        snprintf(scoreText, 20, "Score: %d", score);
+        displayTextBig(scoreText, -0.4f, -0.1f);
+        snprintf(scoreText, 30, "Press <R> to Play Again!");
+        displayTextBig(scoreText, -0.9f, -0.4f);
     }
 
     glutSwapBuffers();  // Swap front and back buffers (of double buffered mode)
@@ -118,6 +125,13 @@ void gameTimer(int value) {
     glutTimerFunc(1000, gameTimer, 0);
 }
 
+void restartGame() {
+    scoreCount.resetScore();
+    player.reset();
+    coinDispatcher.reset();
+    resetGameTime();
+}
+
 /* Called back when the timer expired, used to rerender display */
 void Timer(int value) {
     glutPostRedisplay();    // Post a paint request to activate display()
@@ -143,6 +157,13 @@ void keyboard(unsigned char key, int x, int y) {
         break;
     case 48: // 0
         GAME_STATUS = GAMEOVER;
+        break;
+    case 114:
+    case 82:
+        if (GAME_STATUS == GAMEOVER) {
+            restartGame();
+            GAME_STATUS = PLAYING;
+        }
         break;
     }
         
