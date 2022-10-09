@@ -48,7 +48,13 @@ public:
 		else if (status == RECOVER) {
 			i = (i + 1) % 4;
 			GLfloat alphas[] = { 0.25f, 0.5f, 0.75f, 1.0f };
-			glColor4f(0.0f, 0.0f, 1.0f, alphas[i]);  // Green
+			GLfloat colors[][3] = {
+				{0.545f, 0.0f, 1.0f },
+				{0.545f, 0.0f, 1.0f },
+				{0.545f, 0.0f, 1.0f },
+				{0.0f, 0.0f, 1.0f }
+			};
+			glColor4f(colors[i][0], colors[i][1], colors[i][2], alphas[i]);  // Green
 		}
 		else {
 			glColor3f(1.0f, 0.0f, 0.0f);  // Red
