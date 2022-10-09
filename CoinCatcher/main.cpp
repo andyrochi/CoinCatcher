@@ -14,6 +14,7 @@ int windowPosY = 300;      // Windowed mode's top-left corner y
 
 int refreshMillis = 30;      // Refresh period in milliseconds
 int dispatchIntervals[] = { 200, 300, 400, 500, 600, 700 };
+size_t GAME_TIME = 120;
 
 // Player stats
 GLfloat playerRadius = 0.1f, playerSpeed = 0.03f, playerFasterSpeed = 0.07f;
@@ -39,6 +40,12 @@ void displayScoreText(GLfloat xPos, GLfloat yPos) {
     displayText(text, xPos, yPos);
 }
 
+void displayTimer(GLfloat xPos, GLfloat yPos) {
+    char time[4];
+    snprintf(time, 4, "%03ud", GAME_TIME);
+    displayText(time, xPos, yPos);
+}
+
 /* Callback handler for window re-paint event */
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);  // Clear the color buffer
@@ -47,6 +54,7 @@ void display() {
 
     displayScoreText(clipAreaXRight * 0.4f, 0.9f);
     displayScore(scoreCount.getScore(), clipAreaXRight * 0.7, 0.9f);
+    displayTimer(0.0f, 0.9f);
 
     player.drawPlayer();
     coinDispatcher.collisionCheck(player, scoreCount);
@@ -88,6 +96,11 @@ int getRandomInterval() {
     size_t length = sizeof(dispatchIntervals) / sizeof(dispatchIntervals[0]);
     size_t index = rand() % length;
     return dispatchIntervals[index];
+}
+
+void gameTimer(int value) {
+    GAME_TIME -= 1;
+    glutTimerFunc(1000, gameTimer, 0);
 }
 
 /* Called back when the timer expired, used to rerender display */
@@ -173,6 +186,7 @@ int main(int argc, char** argv) {
     glutReshapeFunc(reshape);     // Register callback handler for window re-shape
     glutTimerFunc(0, Timer, 0);   // Refresh rate
     glutTimerFunc(1000, dispatchcoin, 0); // Dispatch timer
+    glutTimerFunc(1000, gameTimer, 0);
     glutSpecialFunc(specialKeys); // Register callback handler for special-key event
     glutKeyboardFunc(keyboard);   // Register callback handler for special-key event
     glutMouseFunc(mouse);   // Register callback handler for mouse event
