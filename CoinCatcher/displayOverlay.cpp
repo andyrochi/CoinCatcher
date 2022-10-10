@@ -87,17 +87,20 @@ void displayPauseScreen() {
     contCount %= 30;
 }
 
-void displayGameOver(int score) {
+void displayGameOver(int score, bool isBest) {
     static int contCount = 0;
     char text[] = "TIME'S UP!";
     displayTextBig(text, -0.4f, 0.2f);
-    //int score = scoreCount.getScore();
     char scoreText[30];
-    snprintf(scoreText, 20, "Score: %d", score);
+    snprintf(scoreText, 20, "SCORE: %d", score);
     displayTextBig(scoreText, -0.4f, -0.1f);
+    if (isBest) {
+        char newBest[] = "NEW BEST!!";
+        displayTextBig(newBest, -0.4f, -0.4f);
+    }
     if (contCount < 15) {
-        snprintf(scoreText, 30, "Press <R> to Play Again!");
-        displayTextBig(scoreText, -0.9f, -0.4f);
+        snprintf(scoreText, 30, "PRESS <R> TO PLAY AGAIN!");
+        displayTextBig(scoreText, -1.0f, -0.7f);
     }
     contCount++;
     contCount %= 30;

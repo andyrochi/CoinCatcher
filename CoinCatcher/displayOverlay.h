@@ -7,4 +7,4 @@ void displayTimer(GLfloat xPos, GLfloat yPos);
 void displayMenu();
 void displayHelp();
 void displayPauseScreen();
-void displayGameOver(int score);
+void displayGameOver(int score, bool isBest);

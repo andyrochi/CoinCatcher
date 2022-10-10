@@ -67,7 +67,7 @@ void display() {
     }
     
     if (GAME_STATUS == GAMEOVER) {
-        displayGameOver(scoreManager.getScore());
+        displayGameOver(scoreManager.getScore(), scoreManager.getScore() > scoreManager.getBestScore());
     }
 
     glutSwapBuffers();  // Swap front and back buffers (of double buffered mode)
