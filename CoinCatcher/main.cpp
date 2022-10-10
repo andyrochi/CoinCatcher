@@ -14,7 +14,7 @@ int windowPosY = 300;      // Windowed mode's top-left corner y
 
 int refreshMillis = 30;      // Refresh period in milliseconds
 int dispatchIntervals[] = { 200, 300, 400, 500, 600, 700 };
-size_t GAME_TIME = 90;
+int GAME_TIME = 90;
 
 // Player stats
 GLfloat playerRadius = 0.1f, playerSpeed = 0.05f, playerFasterSpeed = 0.08f;
@@ -49,7 +49,7 @@ void displayBestScoreText(GLfloat xPos, GLfloat yPos) {
 
 void displayTimer(GLfloat xPos, GLfloat yPos) {
     char time[4];
-    snprintf(time, 4, "%03ud", GAME_TIME);
+    snprintf(time, 4, "%03d", GAME_TIME);
     displayText(time, xPos, yPos);
 }
 

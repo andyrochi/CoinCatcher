@@ -73,7 +73,7 @@ public:
 		// Use triangular segments to form a circle
 		if (type == COIN) {
 			glBegin(GL_TRIANGLE_FAN);
-			// (233,173,3)
+			// (233,173,3) Outer yellow
 			glColor3f(0.914f, 0.678f, 0.012f);
 			glVertex2f(0.0f, 0.0f);       // Center of circle
 			int numSegments = 80;
@@ -84,7 +84,7 @@ public:
 			}
 			glEnd();
 			glBegin(GL_TRIANGLE_FAN);
-			// (243,199,13)
+			// (243,199,13) inner yellow
 			glColor3f(0.952f, 0.780f, 0.051f);
 			glVertex2f(0.0f, 0.0f);       // Center of circle
 			for (int i = 0; i <= numSegments; i++) { // Last vertex same as first vertex
@@ -95,7 +95,9 @@ public:
 		}
 		else if (type == OBSTACLE){
 			glBegin(GL_POLYGON);
-			glColor4f(0.85, 0.85, 0.85, 1);
+			// gray
+			//glColor4f(0.85, 0.85, 0.85, 1);
+			glColor3f(0, 0, 1.0f);
 			glVertex2f(-1.5*radius, radius);
 			glVertex2f(-1.5*radius, -radius);
 			glVertex2f(1.5*radius, -radius);

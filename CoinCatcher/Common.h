@@ -5,11 +5,11 @@ enum GameStatus {PLAYING, PAUSED, GAMEOVER, STARTMENU};
 enum TextColor {WHITE, YELLOW, RED};
 extern GLdouble clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop;
 extern GLfloat playerRadius, playerSpeed, playerFasterSpeed;
-extern size_t GAME_TIME;
+extern int GAME_TIME;
 extern GameStatus GAME_STATUS;
 
-void setGameTime(size_t value = 90);
-void decGameTime(size_t value = 5);
+void setGameTime(int value = 90);
+void decGameTime(int value = 5);
 
 void displayText(char ch[], GLfloat xpos, GLfloat ypos);
 void displayScore(int number, GLfloat xpos, GLfloat ypos);

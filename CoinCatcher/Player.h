@@ -11,7 +11,7 @@ int i = 0;
 int mouthCount = 0;
 
 void incMouthCount() {
-	mouthCount+=2;
+	mouthCount+=3;
 	if (mouthCount >= 20) mouthCount = 0;
 }
 
@@ -49,7 +49,7 @@ public:
 		// Use triangular segments to form a circle
 		glBegin(GL_TRIANGLE_FAN);
 		if (status == NORMAL) {
-			glColor3f(0.0f, 0.0f, 1.0f);  // Blue
+			glColor3f(1.0f, 0.8f, 0.0f);  // Blue
 		}
 		else if (status == RECOVER) {
 			// Recover flashing effect
@@ -64,14 +64,15 @@ public:
 			glColor4f(colors[i][0], colors[i][1], colors[i][2], alphas[i]);  // Green
 		}
 		else {
-			glColor3f(1.0f, 1.0f, 1.0f);  // Red
+			glColor3f(1.0f, 1.0f, 1.0f);  // White center
 		}
 		glVertex2f(0.0f, 0.0f);       // Center of circle
 		int numSegments = 100;
 		GLfloat angle;
 		for (int i = 0; i <= numSegments; i++) { // Last vertex same as first vertex
 			if (status == INVINCIBLE) {
-				glColor3f(0, 0, 1);
+				// circle color
+				glColor3f(1.0f, 0.8f, 0.0f);
 			}
 			if (direction == RIGHT) {
 				if (i > 20 - mouthCount) {

@@ -1,11 +1,11 @@
 #include "Common.h"
 #include <cstdio>
 
-void setGameTime(size_t val) {
+void setGameTime(int val) {
     GAME_TIME = val;
 }
 
-void decGameTime(size_t val) {
+void decGameTime(int val) {
     GAME_TIME -= val;
     if (GAME_TIME <= 0) {
         GAME_TIME = 0;
