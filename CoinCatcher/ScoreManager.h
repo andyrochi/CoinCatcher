@@ -4,6 +4,7 @@ class ScoreManager {
 public:
 	ScoreManager() {
 		this->score = 0;
+		this->bestScore = 0;
 	}
 	void incScore(int val=50) {
 		this->score += val;
@@ -19,14 +20,20 @@ public:
 	int getScore() {
 		return score;
 	}
+
+	int getBestScore() {
+		return bestScore;
+	}
 	void printScore() {
 		std::cout << "Current Score: " << score << std::endl;
 	}
 
 	void resetScore() {
-		this->score = 0;
+		if (score > bestScore) bestScore = score;
+		score = 0;
 	}
 
 private:
 	int score;
+	int bestScore;
 };

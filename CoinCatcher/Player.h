@@ -45,6 +45,7 @@ public:
 			glColor3f(0.0f, 0.0f, 1.0f);  // Blue
 		}
 		else if (status == RECOVER) {
+			// Recover flashing effect
 			i = (i + 1) % 4;
 			GLfloat alphas[] = { 0.25f, 0.5f, 0.75f, 1.0f };
 			GLfloat colors[][3] = {

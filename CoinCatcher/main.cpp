@@ -41,10 +41,33 @@ void displayScoreText(GLfloat xPos, GLfloat yPos) {
     displayText(text, xPos, yPos);
 }
 
+void displayBestScoreText(GLfloat xPos, GLfloat yPos) {
+    char text[] = "BEST:";
+    displayText(text, xPos, yPos);
+}
+
 void displayTimer(GLfloat xPos, GLfloat yPos) {
     char time[4];
     snprintf(time, 4, "%03ud", GAME_TIME);
     displayText(time, xPos, yPos);
+}
+
+void displayMenu() {
+    char text[] = "WELCOME TO COIN CATCHER!";
+    displayTextBig(text, -1.0f, 0.4f);
+    char text3[] = "TRY TO SCORE AS MUCH AS YOU CAN!";
+    displayTextMedium(text3, -1.0f, -0.2f);
+    char text2[] = "PRESS <ENTER> TO START GAME";
+    displayTextMedium(text2, -0.8f, 0.1f);
+    char text4[] = "PRESS <H> FOR MORE INFO";
+    displayTextMedium(text4, -0.7f, -0.5f);
+}
+
+void displayPauseScreen() {
+    char text[] = "PAUSED";
+    displayTextBig(text, -0.25f, 0.2f);
+    char text2[] = "PRESS <SPACE> TO CONTINUE";
+    displayTextMedium(text2, -0.75f, -0.1f);
 }
 
 void resetGameTime() {
@@ -60,17 +83,12 @@ void display() {
 
 
     if (GAME_STATUS == STARTMENU) {
-        char text[] = "WELCOME TO COIN CATCHER!";
-        displayTextBig(text, -1.0f, 0.4f);
-        char text3[] = "TRY TO SCORE AS MUCH AS YOU CAN!";
-        displayTextMedium(text3, -1.0f, -0.2f);
-        char text2[] = "PRESS <ENTER> TO START GAME";
-        displayTextMedium(text2, -0.8f, 0.1f);
-        char text4[] = "PRESS <H> FOR MORE INFO";
-        displayTextMedium(text4, -0.7f, -0.5f);
+        displayMenu();
     }
 
     if (GAME_STATUS != STARTMENU) {
+        displayBestScoreText(clipAreaXLeft * 0.98f, 0.9f);
+        displayScore(scoreCount.getBestScore(), clipAreaXLeft * 0.7f, 0.9f);
         displayScoreText(clipAreaXRight * 0.4f, 0.9f);
         displayScore(scoreCount.getScore(), clipAreaXRight * 0.7, 0.9f);
         displayTimer(-0.1f, 0.9f);
@@ -81,10 +99,7 @@ void display() {
     }
 
     if (GAME_STATUS == PAUSED) {
-        char text[] = "PAUSED";
-        displayTextBig(text, -0.25f, 0.2f);
-        char text2[] = "PRESS <SPACE> TO CONTINUE";
-        displayTextMedium(text2, -0.75f, -0.1f);
+        displayPauseScreen();
     }
     
     if (GAME_STATUS == GAMEOVER) {
