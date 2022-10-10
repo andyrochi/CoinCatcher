@@ -9,14 +9,19 @@
 
 enum objectType { COIN, OBSTACLE, POWERUP };
 Player* playerPtr = NULL;
-
+size_t powerUpCnt = 0;
 // Change player status from recover to normal
 void recoverPlayer(int val) {
 	if (playerPtr != NULL && playerPtr->getStatus() == RECOVER)
 		playerPtr->setStatus(NORMAL);
 }
 void setPlayerNormal(int val) {
-	if(playerPtr != NULL) playerPtr->setStatus(NORMAL);
+	if (playerPtr == NULL) return;
+	powerUpCnt -= 1;
+	if (powerUpCnt <= 0) {
+		powerUpCnt = 0;
+		playerPtr->setStatus(NORMAL);
+	}
 }
 
 class Coin {
@@ -239,16 +244,16 @@ public:
 		GLfloat playerY = player.getPosY();
 		playerPtr = &player;
 
-		for (auto& coin : objectPool) {
-			if (!coin.isActivated()) continue;
-			bool hit = coin.collisionCheck(playerX, playerY, playerRad);
+		for (auto& obj : objectPool) {
+			if (!obj.isActivated()) continue;
+			bool hit = obj.collisionCheck(playerX, playerY, playerRad);
 			if (hit) {
 				//std::cout << "Collided! At pos:(" << coin.getPosX() << ", " << coin.getPosY() << ")" << std::endl;
-				switch (coin.getType()) {
+				switch (obj.getType()) {
 				case COIN:
 					std::cout << "COIN!" << std::endl;
 					score.incScore(50);
-					coin.deactivate();
+					obj.deactivate();
 					break;
 				case OBSTACLE:
 					if (player.getStatus() != NORMAL) {
@@ -258,13 +263,14 @@ public:
 					player.setStatus(RECOVER);
 					score.decScore(100);
 					glutTimerFunc(2000, recoverPlayer, 0);
-					coin.deactivate();
+					obj.deactivate();
 					break;
 				case POWERUP:
-					std::cout << "POWERUP!" << std::endl;
+					std::cout << "POWERUP: " << powerUpCnt << std::endl;
+					powerUpCnt++;
 					player.setStatus(INVINCIBLE);
 					glutTimerFunc(4000, setPlayerNormal, 0);
-					coin.deactivate();
+					obj.deactivate();
 					break;
 				}
 				
