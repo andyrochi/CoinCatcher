@@ -57,12 +57,15 @@ public:
 			glColor4f(colors[i][0], colors[i][1], colors[i][2], alphas[i]);  // Green
 		}
 		else {
-			glColor3f(1.0f, 0.0f, 0.0f);  // Red
+			glColor3f(1.0f, 1.0f, 1.0f);  // Red
 		}
 		glVertex2f(0.0f, 0.0f);       // Center of circle
 		int numSegments = 100;
 		GLfloat angle;
 		for (int i = 0; i <= numSegments; i++) { // Last vertex same as first vertex
+			if (status == INVINCIBLE) {
+				glColor3f(0, 0, 1);
+			}
 			angle = i * 2.0f * PI / numSegments;  // 360 deg for all segments
 			glVertex2f(cos(angle) * ballRadius, sin(angle) * ballRadius);
 		}
