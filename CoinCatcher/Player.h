@@ -6,7 +6,14 @@
 #pragma once
 
 enum Status { NORMAL, RECOVER, INVINCIBLE };
+enum Direction {LEFT, RIGHT};
 int i = 0;
+int mouthCount = 0;
+
+void incMouthCount() {
+	mouthCount+=2;
+	if (mouthCount >= 20) mouthCount = 0;
+}
 
 class Player {
 public:
@@ -66,8 +73,26 @@ public:
 			if (status == INVINCIBLE) {
 				glColor3f(0, 0, 1);
 			}
-			angle = i * 2.0f * PI / numSegments;  // 360 deg for all segments
-			glVertex2f(cos(angle) * ballRadius, sin(angle) * ballRadius);
+			if (direction == RIGHT) {
+				if (i > 20 - mouthCount) {
+					angle = i * 2.0f * PI / numSegments;  // 360 deg for all segments
+					glVertex2f(cos(angle) * ballRadius, sin(angle) * ballRadius);
+				}
+			}
+			else {
+				if (i < 30 + mouthCount) {
+					angle = i * 2.0f * PI / numSegments;  // 360 deg for all segments
+					glVertex2f(cos(angle) * ballRadius, sin(angle) * ballRadius);
+				}
+				else if (i == 50){
+					glVertex2f(0.0f, 0.0f);
+				}
+				else if (i > 50) {
+					angle = i * 2.0f * PI / numSegments;  // 360 deg for all segments
+					glVertex2f(cos(angle) * ballRadius, sin(angle) * ballRadius);
+				}
+			}
+			
 		}
 		glEnd();
 		glPopMatrix();
@@ -76,10 +101,14 @@ public:
 	void moveRight() {
 		if (GAME_STATUS != PLAYING) return;
 		ballX += xSpeed;
+		direction = RIGHT;
+		incMouthCount();
 	}
 	void moveLeft() {
 		if (GAME_STATUS != PLAYING) return;
 		ballX -= xSpeed;
+		direction = LEFT;
+		incMouthCount();
 	}
 	void moveUp() {
 		if (GAME_STATUS != PLAYING) return;
@@ -147,4 +176,5 @@ private:
 	GLfloat xSpeed;      // Ball's speed in x and y directions
 	GLfloat ySpeed;
 	Status status;
+	Direction direction;
 };
