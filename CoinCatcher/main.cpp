@@ -154,9 +154,6 @@ int getRandomInterval() {
 void gameTimer(int value) {
     if (GAME_STATUS == PLAYING) {
         decGameTime(1);
-        if (GAME_TIME <= 0) {
-            GAME_STATUS = GAMEOVER;
-        }
     }
     glutTimerFunc(1000, gameTimer, 0);
 }

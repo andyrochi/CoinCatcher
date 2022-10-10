@@ -259,9 +259,9 @@ public:
 					if (player.getStatus() != NORMAL) {
 						break;
 					}
-					std::cout << "OH NO!" << playerPtr << std::endl;
+					std::cout << "OH NO!" << std::endl;
 					player.setStatus(RECOVER);
-					score.decScore(100);
+					decGameTime(5);
 					glutTimerFunc(2000, recoverPlayer, 0);
 					obj.deactivate();
 					break;

@@ -7,6 +7,10 @@ void setGameTime(size_t val) {
 
 void decGameTime(size_t val) {
     GAME_TIME -= val;
+    if (GAME_TIME <= 0) {
+        GAME_TIME = 0;
+        GAME_STATUS = GAMEOVER;
+    }
 }
 
 void displayText(char ch[], GLfloat xpos, GLfloat ypos) {
