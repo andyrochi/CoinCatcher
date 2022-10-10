@@ -71,7 +71,7 @@ void displayPauseScreen() {
 }
 
 void resetGameTime() {
-    GAME_TIME = 90;
+    setGameTime(90);
 }
 
 
@@ -153,7 +153,7 @@ int getRandomInterval() {
 
 void gameTimer(int value) {
     if (GAME_STATUS == PLAYING) {
-        GAME_TIME -= 1;
+        decGameTime(1);
         if (GAME_TIME <= 0) {
             GAME_STATUS = GAMEOVER;
         }
@@ -250,7 +250,7 @@ void specialKeys(int key, int x, int y) {
 
 /* Callback handler for mouse event */
 void mouse(int button, int state, int x, int y) {
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) { // Pause/resume
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         std::cout << "mouse clicked!" << std::endl;
     }
 }

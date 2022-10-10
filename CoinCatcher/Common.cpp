@@ -1,6 +1,14 @@
 #include "Common.h"
 #include <cstdio>
 
+void setGameTime(size_t val) {
+    GAME_TIME = val;
+}
+
+void decGameTime(size_t val) {
+    GAME_TIME -= val;
+}
+
 void displayText(char ch[], GLfloat xpos, GLfloat ypos) {
     glPushMatrix();
     glColor3f(1.0f, 1.0f, 1.0f);
