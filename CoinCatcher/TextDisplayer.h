@@ -3,6 +3,7 @@
 #include <string>
 #include <string.h>
 #include <vector>
+// A class to show floating text at an abritrary position
 class TextObject {
 public:
 

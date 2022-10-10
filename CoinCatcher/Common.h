@@ -1,7 +1,12 @@
 #pragma once
 #include <GL/glew.h>
 #include <GL/freeglut.h>
-enum GameStatus {PLAYING, PAUSED, GAMEOVER, STARTMENU};
+#include <time.h>
+#include <stdlib.h>
+#include <iostream>
+#define PI 3.14159265f
+
+enum GameStatus {PLAYING, PAUSED, GAMEOVER, STARTMENU, HELP};
 enum TextColor {WHITE, YELLOW, RED};
 extern GLdouble clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop;
 extern GLfloat playerRadius, playerSpeed, playerFasterSpeed;

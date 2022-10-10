@@ -2,7 +2,6 @@
 #include <Math.h>
 #include <iostream>
 
-#define PI 3.14159265f
 #pragma once
 
 enum Status { NORMAL, RECOVER, INVINCIBLE };
@@ -49,7 +48,7 @@ public:
 		// Use triangular segments to form a circle
 		glBegin(GL_TRIANGLE_FAN);
 		if (status == NORMAL) {
-			glColor3f(1.0f, 0.8f, 0.0f);  // Blue
+			glColor3f(1.0f, 0.8f, 0.0f);  // Yellow
 		}
 		else if (status == RECOVER) {
 			// Recover flashing effect
@@ -61,7 +60,7 @@ public:
 				{0.545f, 0.0f, 1.0f },
 				{0.0f, 0.0f, 1.0f }
 			};
-			glColor4f(colors[i][0], colors[i][1], colors[i][2], alphas[i]);  // Green
+			glColor4f(colors[i][0], colors[i][1], colors[i][2], alphas[i]);  // flash
 		}
 		else {
 			glColor3f(1.0f, 1.0f, 1.0f);  // White center
@@ -72,7 +71,7 @@ public:
 		for (int i = 0; i <= numSegments; i++) { // Last vertex same as first vertex
 			if (status == INVINCIBLE) {
 				// circle color
-				glColor3f(1.0f, 0.8f, 0.0f);
+				glColor3f(1.0f, 0.8f, 0.0f); // yellow
 			}
 			if (direction == RIGHT) {
 				if (i > 20 - mouthCount) {

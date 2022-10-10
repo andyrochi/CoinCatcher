@@ -21,6 +21,9 @@
     <ClCompile Include="Common.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="displayOverlay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="TextDisplayer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="displayOverlay.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

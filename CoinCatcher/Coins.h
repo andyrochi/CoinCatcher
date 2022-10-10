@@ -2,7 +2,6 @@
 #include <GL/freeglut.h>
 #include <Math.h>
 #include <vector>
-#include <iostream>
 #include "Player.h"
 #include "ScoreManager.h"
 #include "TextDisplayer.h"

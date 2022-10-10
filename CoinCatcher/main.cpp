@@ -1,9 +1,7 @@
 #include "Common.h"
+#include "displayOverlay.h"
 #include "Player.h"
 #include "Coins.h"
-#include <time.h>
-#include <stdlib.h>
-#include <iostream>
 
 // Global variables
 char title[] = "CoinCatcher";  // Windowed mode's title
@@ -37,40 +35,6 @@ void initGL() {
     glClearColor(0.0, 0.0, 0.0, 1.0); // Set background (clear) color to black
 }
 
-void displayScoreText(GLfloat xPos, GLfloat yPos) {
-    char text[] = "SCORE:";
-    displayText(text, xPos, yPos);
-}
-
-void displayBestScoreText(GLfloat xPos, GLfloat yPos) {
-    char text[] = "BEST:";
-    displayText(text, xPos, yPos);
-}
-
-void displayTimer(GLfloat xPos, GLfloat yPos) {
-    char time[4];
-    snprintf(time, 4, "%03d", GAME_TIME);
-    displayText(time, xPos, yPos);
-}
-
-void displayMenu() {
-    char text[] = "WELCOME TO COIN CATCHER!";
-    displayTextBig(text, -1.0f, 0.4f);
-    char text3[] = "TRY TO SCORE AS MUCH AS YOU CAN!";
-    displayTextMedium(text3, -1.0f, -0.2f);
-    char text2[] = "PRESS <ENTER> TO START GAME";
-    displayTextMedium(text2, -0.8f, 0.1f);
-    char text4[] = "PRESS <H> FOR MORE INFO";
-    displayTextMedium(text4, -0.7f, -0.5f);
-}
-
-void displayPauseScreen() {
-    char text[] = "PAUSED";
-    displayTextBig(text, -0.25f, 0.2f);
-    char text2[] = "PRESS <SPACE> TO CONTINUE";
-    displayTextMedium(text2, -0.75f, -0.1f);
-}
-
 void resetGameTime() {
     setGameTime(90);
 }
@@ -87,7 +51,7 @@ void display() {
         displayMenu();
     }
 
-    if (GAME_STATUS != STARTMENU) {
+    if (GAME_STATUS != STARTMENU && GAME_STATUS != HELP) {
         displayBestScoreText(clipAreaXLeft * 0.98f, 0.9f);
         displayScore(scoreCount.getBestScore(), clipAreaXLeft * 0.7f, 0.9f);
         displayScoreText(clipAreaXRight * 0.4f, 0.9f);
@@ -100,19 +64,16 @@ void display() {
         textManager.displayText();
     }
 
+    if (GAME_STATUS == HELP) {
+        displayHelp();
+    }
+
     if (GAME_STATUS == PAUSED) {
         displayPauseScreen();
     }
     
     if (GAME_STATUS == GAMEOVER) {
-        char text[] = "TIME'S UP!";
-        displayTextBig(text, -0.4f, 0.2f);
-        int score = scoreCount.getScore();
-        char scoreText[30];
-        snprintf(scoreText, 20, "Score: %d", score);
-        displayTextBig(scoreText, -0.4f, -0.1f);
-        snprintf(scoreText, 30, "Press <R> to Play Again!");
-        displayTextBig(scoreText, -0.9f, -0.4f);
+        displayGameOver(scoreCount.getScore());
     }
 
     glutSwapBuffers();  // Swap front and back buffers (of double buffered mode)
@@ -185,27 +146,40 @@ void keyboard(unsigned char key, int x, int y) {
     case 27:     // ESC key
         exit(0);
         break;
-    case 32:
+    case 32: // SPACE
         if (GAME_STATUS == PLAYING) GAME_STATUS = PAUSED;
         else if (GAME_STATUS == PAUSED)
             GAME_STATUS = PLAYING;
+        else if (GAME_STATUS == STARTMENU)
+            GAME_STATUS = HELP;
         break;
     case 48: // 0
         GAME_STATUS = GAMEOVER;
         break;
-    case 114:
-    case 82:
+    case 114: // r
+    case 82: // R
         if (GAME_STATUS == GAMEOVER) {
             restartGame();
             GAME_STATUS = PLAYING;
         }
         break;
-    case 13:
-        if (GAME_STATUS == STARTMENU) {
+    case 13: // ENTER
+        /*if (GAME_STATUS == STARTMENU) {
+            GAME_STATUS = HELP;
+            std::cout << "enter help" << std::endl;
+        }*/
+        if (GAME_STATUS == HELP) {
             GAME_STATUS = PLAYING;
         }
         break;
+    case 72:
+    case 104:
+        if (GAME_STATUS == STARTMENU) {
+            GAME_STATUS = HELP;
+        }
+        break;
     }
+    
         
 }
 
