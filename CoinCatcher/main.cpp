@@ -23,6 +23,7 @@ GameStatus GAME_STATUS = PAUSED;
 Player player;
 CoinDispatcher coinDispatcher;
 ScoreManager scoreCount;
+TextManager textManager;
 
 // Projection clipping area
 GLdouble clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop;
@@ -94,8 +95,9 @@ void display() {
         displayTimer(-0.1f, 0.9f);
 
         player.drawPlayer();
-        coinDispatcher.collisionCheck(player, scoreCount);
+        coinDispatcher.collisionCheck(player, scoreCount, textManager);
         coinDispatcher.draw();
+        textManager.displayText();
     }
 
     if (GAME_STATUS == PAUSED) {

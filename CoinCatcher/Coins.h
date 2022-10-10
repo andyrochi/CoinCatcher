@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Player.h"
 #include "ScoreManager.h"
+#include "TextDisplayer.h"
 #define PI 3.14159265f
 
 enum objectType { COIN, OBSTACLE, POWERUP };
@@ -237,7 +238,7 @@ public:
 		objectPool[newObjectIndex].reset(posX, posY, type);
 	}
 
-	void collisionCheck(Player& player, ScoreManager& score) {
+	void collisionCheck(Player& player, ScoreManager& score, TextManager& textManager) {
 		if (GAME_STATUS != PLAYING) return;
 		GLfloat playerRad = player.getRadius();
 		GLfloat playerX = player.getPosX();
@@ -249,9 +250,12 @@ public:
 			bool hit = obj.collisionCheck(playerX, playerY, playerRad);
 			if (hit) {
 				//std::cout << "Collided! At pos:(" << coin.getPosX() << ", " << coin.getPosY() << ")" << std::endl;
+				char text[50];
 				switch (obj.getType()) {
 				case COIN:
 					std::cout << "COIN!" << std::endl;
+					snprintf(text, 50, "+50");
+					textManager.addText(obj.getPosX(), obj.getPosY() + 0.02f, text, YELLOW);
 					score.incScore(50);
 					obj.deactivate();
 					break;
@@ -260,6 +264,8 @@ public:
 						break;
 					}
 					std::cout << "OH NO!" << std::endl;
+					snprintf(text, 50, "OUCH.. TIME -5");
+					textManager.addText(obj.getPosX() - 0.2f, obj.getPosY() + 0.02f, text, RED);
 					player.setStatus(RECOVER);
 					decGameTime(5);
 					glutTimerFunc(2000, recoverPlayer, 0);
@@ -268,6 +274,10 @@ public:
 				case POWERUP:
 					std::cout << "POWERUP: " << powerUpCnt << std::endl;
 					powerUpCnt++;
+					snprintf(text, 50, "UP");
+					textManager.addText(obj.getPosX() - 0.2f, obj.getPosY() + 0.02f, text, WHITE);
+					textManager.addText(obj.getPosX(), obj.getPosY() + 0.04f, text, WHITE);
+					textManager.addText(obj.getPosX() + 0.2f, obj.getPosY() + 0.01f, text, WHITE);
 					player.setStatus(INVINCIBLE);
 					glutTimerFunc(4000, setPlayerNormal, 0);
 					obj.deactivate();

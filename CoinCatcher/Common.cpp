@@ -52,11 +52,16 @@ void displayTextMedium(char ch[], GLfloat xpos, GLfloat ypos) {
     glPopMatrix();
 }
 
-void displayTextSmall(char ch[], GLfloat xpos, GLfloat ypos) {
+void displayTextSmall(char ch[], GLfloat xpos, GLfloat ypos, TextColor color) {
     glPushMatrix();
-    glColor3f(1.0f, 1.0f, 1.0f);
+    if (color == YELLOW)
+        glColor3f(0.952f, 0.780f, 0.051f);
+    else if (color == RED)
+        glColor3f(0.749, 0.0f, 0.0f);
+    else
+        glColor3f(1.0f, 1.0f, 1.0f);
     glTranslatef(xpos, ypos, 0.0f);  // Translate to (xPos, yPos)
-    glScalef(0.0003, 0.0003, 1);
+    glScalef(0.0005, 0.0005, 1);
     glutStrokeString(GLUT_STROKE_ROMAN, (unsigned char*)ch);
     glPopMatrix();
 }
