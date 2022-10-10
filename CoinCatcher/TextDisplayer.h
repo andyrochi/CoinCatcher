@@ -28,7 +28,7 @@ public:
 		this->ypos = ypos;
 		content = str;
 		activated = true;
-		frameCnt = 15;
+		frameCnt = 25;
 		color = newColor;
 	}
 
