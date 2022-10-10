@@ -18,7 +18,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Common.cpp">
+    <ClCompile Include="gameUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="displayOverlay.cpp">
@@ -35,7 +35,7 @@
     <ClInclude Include="ScoreManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common.h">
+    <ClInclude Include="gameUtils.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="TextDisplayer.h">

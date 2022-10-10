@@ -1,4 +1,4 @@
-#include "Common.h"
+#include "gameUtils.h"
 #include <cstdio>
 
 void setGameTime(int val) {

@@ -13,9 +13,13 @@ extern GLfloat playerRadius, playerSpeed, playerFasterSpeed;
 extern int GAME_TIME;
 extern GameStatus GAME_STATUS;
 
+// Game time functions
+
 void setGameTime(int value = 90);
 void decGameTime(int value = 5);
 
+
+// Text display functions
 void displayText(char ch[], GLfloat xpos, GLfloat ypos);
 void displayScore(int number, GLfloat xpos, GLfloat ypos);
 void displayTextBig(char ch[], GLfloat xpos, GLfloat ypos);

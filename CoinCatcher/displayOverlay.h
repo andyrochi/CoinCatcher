@@ -1,5 +1,5 @@
 #pragma once
-#include "Common.h"
+#include "gameUtils.h"
 
 void displayScoreText(GLfloat xPos, GLfloat yPos);
 void displayBestScoreText(GLfloat xPos, GLfloat yPos);

@@ -1,4 +1,4 @@
-#include "Common.h"
+#include "gameUtils.h"
 #include "displayOverlay.h"
 #include "Player.h"
 #include "Coins.h"
@@ -20,25 +20,18 @@ GameStatus GAME_STATUS = PAUSED;
 
 Player player;
 CoinDispatcher coinDispatcher;
-ScoreManager scoreCount;
+ScoreManager scoreManager;
 TextManager textManager;
 
 // Projection clipping area
 GLdouble clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop;
 
 bool fullScreenMode = false; // Full-screen or windowed mode?
-bool paused = false;         // Movement paused or resumed
-GLfloat xSpeedSaved, ySpeedSaved;  // To support resume
 
 /* Initialize OpenGL Graphics */
 void initGL() {
     glClearColor(0.0, 0.0, 0.0, 1.0); // Set background (clear) color to black
 }
-
-void resetGameTime() {
-    setGameTime(90);
-}
-
 
 /* Callback handler for window re-paint event */
 void display() {
@@ -51,15 +44,16 @@ void display() {
         displayMenu();
     }
 
+    // Draw game objects
     if (GAME_STATUS != STARTMENU && GAME_STATUS != HELP) {
         displayBestScoreText(clipAreaXLeft * 0.98f, 0.9f);
-        displayScore(scoreCount.getBestScore(), clipAreaXLeft * 0.7f, 0.9f);
+        displayScore(scoreManager.getBestScore(), clipAreaXLeft * 0.7f, 0.9f);
         displayScoreText(clipAreaXRight * 0.4f, 0.9f);
-        displayScore(scoreCount.getScore(), clipAreaXRight * 0.7, 0.9f);
+        displayScore(scoreManager.getScore(), clipAreaXRight * 0.7, 0.9f);
         displayTimer(-0.1f, 0.9f);
 
         player.drawPlayer();
-        coinDispatcher.collisionCheck(player, scoreCount, textManager);
+        coinDispatcher.collisionCheck(player, scoreManager, textManager);
         coinDispatcher.draw();
         textManager.displayText();
     }
@@ -73,7 +67,7 @@ void display() {
     }
     
     if (GAME_STATUS == GAMEOVER) {
-        displayGameOver(scoreCount.getScore());
+        displayGameOver(scoreManager.getScore());
     }
 
     glutSwapBuffers();  // Swap front and back buffers (of double buffered mode)
@@ -108,10 +102,8 @@ void reshape(GLsizei width, GLsizei height) {
     coinDispatcher.updateBoundaries(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
 }
 
-int getRandomInterval() {
-    size_t length = sizeof(dispatchIntervals) / sizeof(dispatchIntervals[0]);
-    size_t index = rand() % length;
-    return dispatchIntervals[index];
+void resetGameTime() {
+    setGameTime(90);
 }
 
 void gameTimer(int value) {
@@ -122,21 +114,28 @@ void gameTimer(int value) {
 }
 
 void restartGame() {
-    scoreCount.resetScore();
+    scoreManager.resetScore();
     player.reset();
     coinDispatcher.reset();
     resetGameTime();
 }
 
-/* Called back when the timer expired, used to rerender display */
-void Timer(int value) {
-    glutPostRedisplay();    // Post a paint request to activate display()
-    glutTimerFunc(refreshMillis, Timer, 0); // subsequent timer call at milliseconds
+int getRandomInterval() {
+    size_t length = sizeof(dispatchIntervals) / sizeof(dispatchIntervals[0]);
+    size_t index = rand() % length;
+    return dispatchIntervals[index];
 }
 
-void dispatchcoin(int value) {
+/* Called back when the timer expired, used to rerender display */
+void refreshDisplay(int value) {
+    glutPostRedisplay();    // Post a paint request to activate display()
+    glutTimerFunc(refreshMillis, refreshDisplay, 0); // subsequent timer call at milliseconds
+}
+
+/* Variable length timer to toss objects */
+void tossNewObject(int value) {
     int nextInterval = getRandomInterval();
-    glutTimerFunc(nextInterval, dispatchcoin, 0); // subsequent timer call at milliseconds
+    glutTimerFunc(nextInterval, tossNewObject, 0);
     coinDispatcher.tossObject();
 }
 
@@ -164,16 +163,12 @@ void keyboard(unsigned char key, int x, int y) {
         }
         break;
     case 13: // ENTER
-        /*if (GAME_STATUS == STARTMENU) {
-            GAME_STATUS = HELP;
-            std::cout << "enter help" << std::endl;
-        }*/
         if (GAME_STATUS == HELP) {
             GAME_STATUS = PLAYING;
         }
         break;
-    case 72:
-    case 104:
+    case 72: // H
+    case 104: // H
         if (GAME_STATUS == STARTMENU) {
             GAME_STATUS = HELP;
         }
@@ -207,16 +202,16 @@ void specialKeys(int key, int x, int y) {
         player.moveLeft();
         break;
     case GLUT_KEY_UP:       // Up: Move player up
-        player.moveUp();
+        //player.moveUp();
         break;
     case GLUT_KEY_DOWN:     // Down: Move player down
-        player.moveDown();
+        //player.moveDown();
         break;
     case GLUT_KEY_PAGE_UP:  // Page-Up: increase ball's radius
-        player.scaleLarge(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
+        //player.scaleLarge(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
         break;
     case GLUT_KEY_PAGE_DOWN: // Page-Down: decrease ball's radius
-        player.scaleSmall(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
+        //player.scaleSmall(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
         break;
     }
 }
@@ -243,9 +238,9 @@ int main(int argc, char** argv) {
     glEnable(GL_BLEND);
     glutDisplayFunc(display);     // Register callback handler for window re-paint
     glutReshapeFunc(reshape);     // Register callback handler for window re-shape
-    glutTimerFunc(0, Timer, 0);   // Refresh rate
-    glutTimerFunc(1000, dispatchcoin, 0); // Dispatch timer
-    glutTimerFunc(1000, gameTimer, 0);
+    glutTimerFunc(0, refreshDisplay, 0);   // Refresh rate
+    glutTimerFunc(1000, tossNewObject, 0); // Dispatch timer
+    glutTimerFunc(1000, gameTimer, 0); // Game timer
     glutSpecialFunc(specialKeys); // Register callback handler for special-key event
     glutKeyboardFunc(keyboard);   // Register callback handler for special-key event
     glutMouseFunc(mouse);   // Register callback handler for mouse event
